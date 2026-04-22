@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>꼬마 모험가</title>
+<title>지율이의 한글나라</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#1a237e;display:flex;justify-content:center;align-items:center;min-height:100vh;overflow:hidden;font-family:"맑은 고딕",sans-serif}
@@ -400,34 +400,70 @@ function drawPlayer(){
 
 function drawPlayerBody(x,y,facing,walkOsc){
   const f=facing;
-  // Body (red)
-  fillRR(x+3,y+18,30,22,4,'#e53935');
-  // Overalls (blue)
-  fillRR(x+6,y+24,24,16,3,'#1565c0');
-  // Straps
-  fillR(x+8,y+18,6,8,'#1565c0');
-  fillR(x+22,y+18,6,8,'#1565c0');
-  // Head
-  fillC(x+PW/2,y+12,15,'#ffcc80');
-  // Hat brim
-  fillR(x+1,y+8,34,6,'#e53935');
-  // Hat top
-  fillR(x+7,y+0,22,10,'#e53935');
-  // Eyes
-  const ex=f>0?x+21:x+11;
-  fillC(ex,y+11,3.5,'#fff');
-  fillC(ex+f*1.5,y+11,2,'#1a1a1a');
-  // Nose
-  fillC(x+PW/2+(f*3),y+15,2,'#ef9a9a');
-  // Mustache
-  fillRR(x+9,y+17,18,4,2,'#4e342e');
-  // Left leg
-  const ll=walkOsc;
-  fillRR(x+5,y+38,12,14,3,'#1565c0');
-  fillRR(x+18,y+38,12,14,3,'#1565c0');
-  // Shoes
-  fillRR(x+3+ll,y+48,16,7,3,'#4e342e');
-  fillRR(x+17-ll,y+48,16,7,3,'#4e342e');
+  const ll=walkOsc||0;
+
+  // ── 다리 (반바지 아래) ──
+  fillRR(x+5,y+36,13,16,3,'#ffcc80');   // 왼쪽 다리 (살색)
+  fillRR(x+18,y+36,13,16,3,'#ffcc80');  // 오른쪽 다리
+  // 신발 (흰 운동화)
+  fillRR(x+2+ll, y+48,17,7,3,'#fff');
+  fillRR(x+17-ll,y+48,17,7,3,'#fff');
+  cx.strokeStyle='#bbb';cx.lineWidth=1;
+  cx.strokeRect(x+2+ll,y+48,17,7);
+  cx.strokeRect(x+17-ll,y+48,17,7);
+
+  // ── 몸통 (밝은 줄무늬 티셔츠) ──
+  fillRR(x+2,y+20,32,20,5,'#ef5350');   // 빨간 티셔츠
+  // 흰 줄무늬
+  fillR(x+2,y+24,32,4,'rgba(255,255,255,0.35)');
+  fillR(x+2,y+31,32,4,'rgba(255,255,255,0.35)');
+  // 반바지
+  fillRR(x+3,y+35,30,10,4,'#1565c0');
+
+  // ── 팔 ──
+  if(f>0){
+    fillRR(x-4,y+21,10,14,4,'#ffcc80'); // 왼팔
+    fillRR(x+30,y+21,10,14,4,'#ffcc80');// 오른팔
+  } else {
+    fillRR(x-4,y+21,10,14,4,'#ffcc80');
+    fillRR(x+30,y+21,10,14,4,'#ffcc80');
+  }
+
+  // ── 얼굴 (통통하고 귀엽게) ──
+  // 얼굴 기본 (살색)
+  fillC(x+PW/2, y+11, 16,'#ffcc80');
+  // 볼터치 (귀여운 홍조)
+  const chkX=f>0?x+23:x+9;
+  cx.fillStyle='rgba(255,150,150,0.5)';
+  cx.beginPath();cx.ellipse(chkX,y+14,5,3.5,0,0,Math.PI*2);cx.fill();
+
+  // ── 까만 머리 ──
+  // 머리카락 뒷부분
+  fillC(x+PW/2,y+4,15,'#212121');
+  // 앞머리 (옆으로 가른 스타일)
+  cx.fillStyle='#212121';cx.beginPath();
+  cx.ellipse(x+PW/2,y+0,14,8,0,Math.PI,Math.PI*2);cx.fill();
+  // 앞머리 한 가닥
+  fillRR(f>0?x+20:x+6, y-4, 8, 10, 4,'#212121');
+
+  // ── 눈 ──
+  const eyeX=f>0?x+21:x+11;
+  // 눈 흰자
+  fillC(eyeX, y+10, 4,'#fff');
+  // 눈동자 (까만 눈)
+  fillC(eyeX+f*1.5, y+10.5, 2.8,'#1a1a1a');
+  // 눈 하이라이트
+  fillC(eyeX+f*2.5, y+9, 1,'#fff');
+  // 눈썹
+  cx.strokeStyle='#212121';cx.lineWidth=2;cx.lineCap='round';
+  cx.beginPath();cx.moveTo(eyeX-4,y+5);cx.lineTo(eyeX+4,y+4);cx.stroke();
+
+  // ── 코 & 입 ──
+  fillC(x+PW/2+f*3, y+14, 1.8,'#f48fb1');
+  // 미소
+  cx.strokeStyle='#c2185b';cx.lineWidth=1.8;cx.lineCap='round';
+  cx.beginPath();
+  cx.arc(x+PW/2+f*2,y+16,4,0.1,Math.PI-0.1);cx.stroke();
 }
 
 // ── Draw: enemies ─────────────────────────────────────────────────────────────
@@ -509,7 +545,7 @@ function drawTitle(){
   fillRR(W/2-220,80,440,160,18,'rgba(0,0,0,0.55)');
   const pulse=1+Math.sin(gt*0.07)*0.04;
   cx.save();cx.translate(W/2,145);cx.scale(pulse,pulse);
-  txtS('꼬마 모험가',0,0,52,'#ffeb3b','#e65100');
+  txtS('지율이의 한글나라',0,0,52,'#ffeb3b','#e65100');
   cx.restore();
   txtS('🌟 한글 단어 탐험 🌟',W/2,185,18,'#fff','#1565c0');
   // Controls
